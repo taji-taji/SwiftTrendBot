@@ -1,1 +1,1 @@
-worker: SlackBot --env=production
+worker: SwiftTrend --config:bot-config.token=$BOT_TOKEN

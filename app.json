@@ -1,12 +1,22 @@
 {
-    "name": "vapor-example",
-    "scripts": {},
-    "env": {},
-    "formation": {},
-    "addons": [],
-    "buildpacks": [
-        {
-            "url": "https://github.com/kylef/heroku-buildpack-swift"
+    "name": "SwiftTrend",
+    "description": "A template for starting a SlackBot with Vapor. Say 'hello' to your bot in Slack after building.",
+    "logo": "",
+    "repository": "https://github.com/taji-taji/SwiftTrendBot",
+    "keywords": ["swift", "vapor", "slack"],
+    "env": {
+        "BOT_TOKEN": {
+            "description": "Your slackbot's token. Requires admin status. Visit: https://taji-taji.slack.com/apps/A0F7YS25R-bots",
+            "required": true
         }
-    ]
+    },
+    "formation": {
+    },
+    "addons": [
+    ],
+    "buildpacks": [
+                   {
+                   "url": "https://github.com/kylef/heroku-buildpack-swift"
+                   }
+                   ]
 }
