@@ -1,1 +1,1 @@
-worker: SlackBot --config:bot-config.token=$BOT_TOKEN
+worker: slackbot --config:bot-config.token=$BOT_TOKEN
