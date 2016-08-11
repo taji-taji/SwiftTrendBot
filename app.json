@@ -1,5 +1,5 @@
 {
-    "name": "SwiftTrend",
+    "name": "SlackBot",
     "description": "A template for starting a SlackBot with Vapor. Say 'hello' to your bot in Slack after building.",
     "logo": "",
     "repository": "https://github.com/taji-taji/SwiftTrendBot",
