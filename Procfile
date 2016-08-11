@@ -1,1 +1,1 @@
-worker: SlackBot --config:bot-config.token=$BOT_TOKEN
+worker: SwiftTrend --config:bot-config.token=$BOT_TOKEN
