@@ -1,1 +1,1 @@
-worker: token=$BOT_TOKEN
+worker: SlackBot --env=production
