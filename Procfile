@@ -1,1 +1,1 @@
-worker: .build/debug/App
+worker: .build/release/App
