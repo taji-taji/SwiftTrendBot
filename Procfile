@@ -1,1 +1,1 @@
-web: App --env=production --workdir="./"
+worker: SlackBot --config:bot-config.token=$BOT_TOKEN
