@@ -7,6 +7,7 @@ let config = try Config(workingDirectory: workingDirectory)
 guard let token = config["bot-config", "token"].string else {
     throw BotError.missingConfig
 }
+print(token)
 
 let rtmResponse = try Client.loadRealtimeApi(token: token)
 guard let webSocketURL = rtmResponse.data["url"].string else {
@@ -27,6 +28,7 @@ try WebSocket.connect(to: webSocketURL, using: Client<TLSClientStream>.self) { w
         
         if text.hasPrefix("hello") {
             let response = SlackMessage(to: channel, text: "Hi there 👋")
+            print(try? GitHub.searchRepositories())
             try ws.send(response)
         } else if text.hasPrefix("version") {
             let response = SlackMessage(to: channel, text: "Current Version: \(VERSION)")
