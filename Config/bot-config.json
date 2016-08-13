@@ -1,3 +1,4 @@
 {
-    "token": "$BOT_TOKEN"
+    "token": "$BOT_TOKEN",
+    "github_token": "$GITHUB_TOKEN"
 }
