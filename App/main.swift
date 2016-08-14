@@ -31,8 +31,12 @@ try WebSocket.connect(to: webSocketURL, using: Client<TLSClientStream>.self) { w
         
         if text.hasPrefix("hello") {
             let github = GitHub(token: githubToken)
-            let res = try? github.searchRepositories()
-            let response = SlackMessage(to: channel, text: "\(res)")
+            do {
+                let res = try github.searchRepositories()
+            } catch let e {
+                print(e)
+            }
+            let response = SlackMessage(to: channel, text: "Hi!")
             try ws.send(response)
         } else if text.hasPrefix("version") {
             let response = SlackMessage(to: channel, text: "Current Version: \(VERSION)")
