@@ -9,6 +9,7 @@
 import Vapor
 import VaporTLS
 import HTTP
+import Transport
 
 struct GitHub {
     
@@ -38,7 +39,7 @@ struct GitHub {
         let url: String = "\(searchURI)\(type.rawValue)"
         print(url)
         print(headers)
-        return try HTTP.Client<TLSClientStream>.get(
+        return try HTTP.Client<TCPClientStream>.get(
             url,
             headers: headers,
             query: query
