@@ -1,6 +1,7 @@
 import Vapor
 import VaporTLS
 import HTTP
+import Transport
 
 let config = try Config(workingDirectory: workingDirectory)
 
@@ -33,8 +34,8 @@ try WebSocket.connect(to: webSocketURL, using: Client<TLSClientStream>.self) { w
             let github = GitHub(token: githubToken)
             do {
                 let res = try github.searchRepositories()
-            } catch let e {
-                print(e)
+            } catch ProgramStreamError.unsupportedSecurityLayer {
+                print("unsupportedSecurityLayer")
             }
             let response = SlackMessage(to: channel, text: "Hi!")
             try ws.send(response)
