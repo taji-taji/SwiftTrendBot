@@ -27,7 +27,10 @@ struct GitHub {
     }
     
     func search(type: SearchType, language: String = "swift") throws -> HTTP.Response {
-        let headers: [HeaderKey: String] = ["Accept": "application/vnd.github.v3.text-match+json"]
+        let headers: [HeaderKey: String] = [
+            "Accept": "application/vnd.github.v3.text-match+json",
+            "User-Agent": "SwiftTrend"
+            ]
         let query: [String: CustomStringConvertible] = [
             "q"           : "language:\(language)+created:>=2016-08-05",
             "sort"        : "stars",
@@ -37,8 +40,6 @@ struct GitHub {
             "access_token": self.token
         ]
         let url: String = "\(searchURI)\(type.rawValue)"
-        print(url)
-        print(headers)
         return try HTTP.Client<TCPClientStream>.get(
             url,
             headers: headers,

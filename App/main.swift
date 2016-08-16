@@ -11,6 +11,9 @@ guard let token = config["bot-config", "token"].string else {
 guard let githubToken = config["bot-config", "github_token"].string else {
     throw BotError.missingConfig
 }
+guard let botUserId = config["bot-config", "bot_user_id"].string else {
+    throw BotError.missingConfig
+}
 print(token)
 
 let rtmResponse = try Client.loadRealtimeApi(token: token)
@@ -30,17 +33,44 @@ try WebSocket.connect(to: webSocketURL, using: Client<TLSClientStream>.self) { w
             let text = event["text"]?.string
             else { return }
         
-        if text.hasPrefix("hello") {
+        if text.hasPrefix("<@\(botUserId)>") {
+            let language = text[text.index(text.startIndex, offsetBy: 14)..<text.endIndex]
+            var message = ""
+            
             let github = GitHub(token: githubToken)
+            
             do {
-                let res = try github.searchRepositories()
+                let res = try github.searchRepositories(language: language)
+                if let items = res.data["items"]?.array {
+                    message += "=======================\n"
+                    message += "Trending Repositories of *\(language)*\n"
+                    message += "=======================\n\n"
+                    for item in items {
+                        guard
+                            let full_name = item.object?["full_name"].string,
+                            let stargazers_count = item.object?["stargazers_count"].int
+                            else {
+                            continue
+                        }
+                        message += "*\(full_name) (\(stargazers_count))*\n"
+                        if let description = item.object?["description"].string {
+                            message += "\(description)\n"
+                        }
+                        if let html_url = item.object?["html_url"].string {
+                            message += "\(html_url)\n"
+                        }
+                        message += "\n--------------\n\n"
+                    }
+                } else if let error = res.data["errors"]?.object, let errorMessage = error["message"].string {
+                    message = "Error! \(errorMessage)"
+                }
             } catch ProgramStreamError.unsupportedSecurityLayer {
-                print("unsupportedSecurityLayer")
+                message = "Error! Unsupported Security Layer!"
+            } catch let error {
+                message = "Error! \(error)"
             }
-            let response = SlackMessage(to: channel, text: "Hi!")
-            try ws.send(response)
-        } else if text.hasPrefix("version") {
-            let response = SlackMessage(to: channel, text: "Current Version: \(VERSION)")
+            
+            let response = SlackMessage(to: channel, text: message)
             try ws.send(response)
         }
     }
