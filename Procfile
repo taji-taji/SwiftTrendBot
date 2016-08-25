@@ -1,1 +1,1 @@
-worker: .build/release/App
+worker: App --env=production --workdir="./"
