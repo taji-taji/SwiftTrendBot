@@ -33,8 +33,8 @@ try WebSocket.connect(to: webSocketURL) { ws in
             let text = event["text"]?.string
             else { return }
         
-        if text.hasPrefix("<@\(botUserId)>") {
-            let language = text[text.index(text.startIndex, offsetBy: 14)..<text.endIndex]
+        if text.hasPrefix("trending") {
+            let language = text[text.index(text.startIndex, offsetBy: 10)..<text.endIndex]
             var message = ""
             
             let github = GitHub(token: githubToken)
