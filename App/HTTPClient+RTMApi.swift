@@ -13,6 +13,7 @@ import Transport
 
 extension HTTP.Client where ClientStreamType: TCPClientStream {
     static func loadRealtimeApi(token: String, simpleLatest: Bool = true, noUnreads: Bool = true) throws -> HTTP.Response {
+        print("loadRealtimeApi")
         let headers: [HeaderKey: String] = ["Accept": "application/json; charset=utf-8"]
         let query: [String: CustomStringConvertible] = [
             "token": token,

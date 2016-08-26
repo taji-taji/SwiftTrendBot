@@ -48,6 +48,7 @@ struct GitHub {
     }
     
     func searchRepositories(language: String = "swift") throws -> HTTP.Response {
+        print(searchRepositories)
         return try search(type: SearchType.repositories, language: language)
     }
     
