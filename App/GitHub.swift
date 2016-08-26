@@ -7,7 +7,7 @@
 //
 
 import Vapor
-import VaporTLS
+import TLS
 import HTTP
 import Transport
 

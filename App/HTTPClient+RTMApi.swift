@@ -7,10 +7,11 @@
 //
 
 import Vapor
-import VaporTLS
+import TLS
 import HTTP
+import Transport
 
-extension HTTP.Client where ClientStreamType: TLSClientStream {
+extension HTTP.Client where ClientStreamType: TCPClientStream {
     static func loadRealtimeApi(token: String, simpleLatest: Bool = true, noUnreads: Bool = true) throws -> HTTP.Response {
         let headers: [HeaderKey: String] = ["Accept": "application/json; charset=utf-8"]
         let query: [String: CustomStringConvertible] = [

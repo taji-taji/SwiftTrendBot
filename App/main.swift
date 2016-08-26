@@ -1,5 +1,5 @@
 import Vapor
-import VaporTLS
+import TLS
 import HTTP
 import Transport
 
@@ -21,7 +21,7 @@ guard let webSocketURL = rtmResponse.data["url"].string else {
     throw BotError.invalidResponse
 }
 
-try WebSocket.connect(to: webSocketURL, using: Client<TLSClientStream>.self) { ws in
+try WebSocket.connect(to: webSocketURL) { ws in
     print("Connected to \(webSocketURL)")
     
     ws.onText = { ws, text in
