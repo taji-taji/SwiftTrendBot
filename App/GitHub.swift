@@ -18,6 +18,12 @@ struct GitHub {
     static let searchURI = baseURI + "/search"
     
     var token: String
+    let searchDate: String = {
+        let y = Date(timeIntervalSinceNow: TimeInterval(-60 * 60 * 24 * 7))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: y)
+    }()
     
     init(token: String) {
         self.token = token
@@ -33,14 +39,8 @@ struct GitHub {
     }
 
     func searchTrending(type: SearchType, language: String = "swift") throws -> HTTP.Response {
-        let yesterday: String = {
-            let y = Date(timeIntervalSinceNow: TimeInterval(-60 * 60 * 24))
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            return formatter.string(from: y)
-        }()
         let query: [String: CustomStringConvertible] = [
-            "q"           : "language:\(language)+created:>=\(yesterday)",
+            "q"           : "language:\(language)+created:>=\(searchDate)",
             "sort"        : "stars",
             "order"       : "desc",
             "page"        : 1,

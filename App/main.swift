@@ -2,6 +2,7 @@ import Vapor
 import TLS
 import HTTP
 import Transport
+import Foundation
 
 let token = try BotConfig.botToken.load()
 let githubToken = try BotConfig.githubToken.load()
@@ -37,7 +38,10 @@ try WebSocket.connect(to: webSocketURL) { ws in
                 if let items = res.data["items"]?.array {
                     message += "=======================\n"
                     message += "Trending Repositories of *\(language)*\n"
+                    message += "- Created after \(github.searchDate)\n"
                     message += "=======================\n\n"
+                    message += "\n--------------\n\n"
+                    
                     for item in items {
                         guard
                             let full_name = item.object?["full_name"].string,
@@ -64,6 +68,17 @@ try WebSocket.connect(to: webSocketURL) { ws in
             let response = SlackMessage(to: channel, text: message)
             try ws.send(response)
         }
+        
+//        let timer
+//            = Timer(timeInterval: TimeInterval(10), repeats: true) { (timer) -> Void in
+//                do {
+//                    try ws.send("Hello!")
+//                } catch let error {
+//                    print(error)
+//                }
+//        }
+//        timer.fire()
+        
     }
     
     ws.onClose = { ws, _, _, _ in
