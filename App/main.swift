@@ -3,18 +3,9 @@ import TLS
 import HTTP
 import Transport
 
-let config = try Config(workingDirectory: workingDirectory)
-
-guard let token = config["bot-config", "token"].string else {
-    throw BotError.missingConfig
-}
-guard let githubToken = config["bot-config", "github_token"].string else {
-    throw BotError.missingConfig
-}
-guard let botUserId = config["bot-config", "bot_user_id"].string else {
-    throw BotError.missingConfig
-}
-print(token)
+let token = try BotConfig.botToken.load()
+let githubToken = try BotConfig.githubToken.load()
+let botUserId = try BotConfig.botUserID.load()
 
 let rtmResponse = try Client.loadRealtimeApi(token: token)
 guard let webSocketURL = rtmResponse.data["url"].string else {
@@ -33,8 +24,10 @@ try WebSocket.connect(to: webSocketURL) { ws in
             let text = event["text"]?.string
             else { return }
         
-        if text.hasPrefix("trending") {
-            let language = text[text.index(text.startIndex, offsetBy: 10)..<text.endIndex]
+        let components = text.components(separatedBy: " ")
+        
+        if components[0] == "trending" {
+            let language = components[1]
             var message = ""
             
             let github = GitHub(token: githubToken)
@@ -49,9 +42,7 @@ try WebSocket.connect(to: webSocketURL) { ws in
                         guard
                             let full_name = item.object?["full_name"].string,
                             let stargazers_count = item.object?["stargazers_count"].int
-                            else {
-                            continue
-                        }
+                            else { continue }
                         message += "*\(full_name) (\(stargazers_count))*\n"
                         if let description = item.object?["description"].string {
                             message += "\(description)\n"

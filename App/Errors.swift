@@ -13,7 +13,7 @@ enum BotError: Swift.Error {
      "token": "[your - token - here]"
      }
      */
-    case missingConfig
+    case missingConfig(BotConfig)
     
     /*:
      Got an invalid response from RTM api

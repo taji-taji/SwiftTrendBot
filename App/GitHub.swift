@@ -10,11 +10,13 @@ import Vapor
 import TLS
 import HTTP
 import Transport
+import Foundation
 
 struct GitHub {
     
-    let baseURI   = "https://api.github.com/"
-    let searchURI = "https://api.github.com/search/"
+    static let baseURI   = "https://api.github.com"
+    static let searchURI = baseURI + "/search"
+    
     var token: String
     
     init(token: String) {
@@ -24,32 +26,50 @@ struct GitHub {
     enum SearchType: String {
         case repositories = "repositories"
         case users        = "users"
+        
+        var uri: String {
+            return searchURI + "/" + self.rawValue
+        }
     }
-    
-    func search(type: SearchType, language: String = "swift") throws -> HTTP.Response {
-        let headers: [HeaderKey: String] = [
-            "Accept": "application/vnd.github.v3.text-match+json",
-            "User-Agent": "SwiftTrend"
-            ]
+
+    func searchTrending(type: SearchType, language: String = "swift") throws -> HTTP.Response {
+        let yesterday: String = {
+            let y = Date(timeIntervalSinceNow: TimeInterval(-60 * 60 * 24))
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            return formatter.string(from: y)
+        }()
         let query: [String: CustomStringConvertible] = [
-            "q"           : "language:\(language)+created:>=2016-08-05",
+            "q"           : "language:\(language)+created:>=\(yesterday)",
             "sort"        : "stars",
             "order"       : "desc",
             "page"        : 1,
             "per_page"    : 10,
             "access_token": self.token
         ]
-        let url: String = "\(searchURI)\(type.rawValue)"
+        return try search(type: type, query: query)
+    }
+    
+    func search(type: SearchType, query: [String: CustomStringConvertible]) throws -> HTTP.Response {
+        let headers: [HeaderKey: String] = [
+            "Accept": "application/vnd.github.v3.text-match+json",
+            "User-Agent": "SwiftTrend"
+            ]
         return try HTTP.Client<TCPClientStream>.get(
-            url,
+            type.uri,
             headers: headers,
             query: query
         )
     }
     
     func searchRepositories(language: String = "swift") throws -> HTTP.Response {
-        print(searchRepositories)
-        return try search(type: SearchType.repositories, language: language)
+        print("searchRepositories")
+        return try searchTrending(type: SearchType.repositories, language: language)
+    }
+    
+    func searchUsers(language: String = "swift") throws -> HTTP.Response {
+        print("searchUsers")
+        return try searchTrending(type: SearchType.users, language: language)
     }
     
 }
