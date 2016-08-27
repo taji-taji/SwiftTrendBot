@@ -8,6 +8,7 @@ let package = Package(
     ],
     exclude: [
         "Config",
+        "Resources",
         "Tests",
     ]
 )

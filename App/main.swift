@@ -68,16 +68,20 @@ try WebSocket.connect(to: webSocketURL) { ws in
             let response = SlackMessage(to: channel, text: message)
             try ws.send(response)
         }
+
+        #if os(Linux)
         
-//        let timer
-//            = Timer(timeInterval: TimeInterval(10), repeats: true) { (timer) -> Void in
-//                do {
-//                    try ws.send("Hello!")
-//                } catch let error {
-//                    print(error)
-//                }
-//        }
-//        timer.fire()
+        let timer
+            = Timer(timeInterval: TimeInterval(10), repeats: true) { (timer) -> Void in
+                do {
+                    try ws.send("Hello!")
+                } catch let error {
+                    print(error)
+                }
+        }
+        timer.fire()
+        
+        #endif
         
     }
     
