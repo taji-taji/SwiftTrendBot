@@ -14,20 +14,20 @@ enum BotConfig {
     case botUserID
     
     func load() throws -> String {
-        let config = try Config(workingDirectory: workingDirectory)
+        let config = try Config(prioritized: [.directory(root: workingDirectory + "Config/")])
         switch self {
         case .botToken:
-            guard let token = config["bot-config", "token"].string else {
+            guard let token = config["bot-config", "token"]?.string else {
                 throw BotError.missingConfig(.botToken)
             }
             return token
         case .githubToken:
-            guard let githubToken = config["bot-config", "github_token"].string else {
+            guard let githubToken = config["bot-config", "github_token"]?.string else {
                 throw BotError.missingConfig(.githubToken)
             }
             return githubToken
         case .botUserID:
-            guard let botUserID = config["bot-config", "token"].string else {
+            guard let botUserID = config["bot-config", "token"]?.string else {
                 throw BotError.missingConfig(.botUserID)
             }
             return botUserID

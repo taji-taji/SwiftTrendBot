@@ -11,7 +11,7 @@ import TLS
 import HTTP
 import Transport
 
-extension HTTP.Client where ClientStreamType: TCPClientStream {
+extension HTTP.Client {
     static func loadRealtimeApi(token: String, simpleLatest: Bool = true, noUnreads: Bool = true) throws -> HTTP.Response {
         print("loadRealtimeApi")
         let headers: [HeaderKey: String] = ["Accept": "application/json; charset=utf-8"]
@@ -29,7 +29,7 @@ extension HTTP.Client where ClientStreamType: TCPClientStream {
 }
 
 extension Bool {
-    private var queryInt: Int {
+    fileprivate var queryInt: Int {
         // slack uses 1 / 0 in their demo
         return self ? 1 : 0
     }

@@ -55,7 +55,7 @@ struct GitHub {
             "Accept": "application/vnd.github.v3.text-match+json",
             "User-Agent": "SwiftTrend"
             ]
-        return try HTTP.Client<TCPClientStream>.get(
+        return try Client<TCPClientStream, Serializer<Request>, Parser<Response>>.get(
             type.uri,
             headers: headers,
             query: query

@@ -8,8 +8,8 @@ let token = try BotConfig.botToken.load()
 let githubToken = try BotConfig.githubToken.load()
 let botUserId = try BotConfig.botUserID.load()
 
-let rtmResponse = try Client.loadRealtimeApi(token: token)
-guard let webSocketURL = rtmResponse.data["url"].string else {
+let rtmResponse = try BasicClient.loadRealtimeApi(token: token)
+guard let webSocketURL = rtmResponse.data["url"]?.string else {
     throw BotError.invalidResponse
 }
 
@@ -44,19 +44,19 @@ try WebSocket.connect(to: webSocketURL) { ws in
                     
                     for item in items {
                         guard
-                            let full_name = item.object?["full_name"].string,
-                            let stargazers_count = item.object?["stargazers_count"].int
+                            let full_name = item.object?["full_name"]?.string,
+                            let stargazers_count = item.object?["stargazers_count"]?.int
                             else { continue }
                         message += "*\(full_name) (\(stargazers_count))*\n"
-                        if let description = item.object?["description"].string {
+                        if let description = item.object?["description"]?.string {
                             message += "\(description)\n"
                         }
-                        if let html_url = item.object?["html_url"].string {
+                        if let html_url = item.object?["html_url"]?.string {
                             message += "\(html_url)\n"
                         }
                         message += "\n--------------\n\n"
                     }
-                } else if let error = res.data["errors"]?.object, let errorMessage = error["message"].string {
+                } else if let error = res.data["errors"]?.object, let errorMessage = error["message"]?.string {
                     message = "Error! \(errorMessage)"
                 }
             } catch ProgramStreamError.unsupportedSecurityLayer {
@@ -72,7 +72,7 @@ try WebSocket.connect(to: webSocketURL) { ws in
         #if os(Linux)
         
         let timer
-            = Timer(timeInterval: TimeInterval(10), repeats: true) { (timer) -> Void in
+            = Timer(timeInterval: TimeInterval(120), repeats: true) { (timer) -> Void in
                 do {
                     try ws.send("Hello!")
                 } catch let error {
