@@ -1,7 +1,24 @@
+[WIP]  
+Currently only runs on mac.
+
 # Swift Trend Bot
 
 This is a Slack bot that will notify you the Swift Trending Repositries of Github.  
 This is written with [Vapor](https://github.com/vapor/vapor).
+
+# Usage
+
+## Talk to bot
+
+You can get information of the trending repositories on Github 
+by input in the following format to the channel of Slack.
+
+```
+trending {language}
+ex) trending swift
+```
+
+By input `trending swift`, you will get information of the trending repositories written by `swift`.
 
 # Set up
 
@@ -12,6 +29,8 @@ If you have not yet installed Vapor, according to the documentation, be sure to 
 https://vapor.github.io/documentation/
 
 ## 2. Download Source
+
+Download source from this repository.
 
 ## 3. Configure Slack Bot
 
@@ -26,10 +45,41 @@ https://my.slack.com/services/new/bot
 
 ![](Resources/create-slack-bot2.png)
 
+## 4. Generate Github Access Token
 
-## 4. Create App on Heroku
+In order to loosen the rate limit of Github API, you use the Access Token.  
 
-## 5. Configure the settings of Heroku
+You can generate below URL.  
 
-## 6. Deploy to Heroku
+https://github.com/settings/tokens
+
+
+## 5. Create App on Heroku
+
+Create new App on Heroku.  
+
+https://dashboard.heroku.com/new
+
+## 6. Configure the settings of Heroku
+
+### Deploy settings
+Configure Heroku Git and connect to Github.  
+
+### Config Variables
+Set Config Variables under your project directory.  
+(
+In advance , you must be logged in to Heroku. `heroku login`)
+
+- `BOT_TOKEN`: Generated at `3. Configure Slack Bot` section
+- `GITHUB_TOKEN`: Generated at `4. Generate Github Access Token` section
+
+```sh
+$ heroku config:set BOT_TOKEN=xoxb-00000000000-XXXXXXXXXXXXXXXXXXXXXXXXX
+$ heroku config:set GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+![](Resources/create-heroku-app.png)
+
+## 7. Deploy to Heroku
+
 
