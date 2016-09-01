@@ -71,7 +71,7 @@ try WebSocket.connect(to: webSocketURL) { ws in
         #if os(Linux)
         
         let timer
-            = Timer(timeInterval: TimeInterval(120), repeats: true) { (timer) -> Void in
+            = Timer(fire: Date(), interval: TimeInterval(120), repeats: true) { (timer) -> Void in
                 do {
                     try ws.send("Hello!")
                 } catch let error {
