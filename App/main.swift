@@ -7,7 +7,7 @@ import Foundation
 let token = try BotConfig.botToken.load()
 let githubToken = try BotConfig.githubToken.load()
 
-let rtmResponse = try BasicClient.loadRealtimeApi(token: token)
+let rtmResponse = try Client.loadRealtimeApi(token: token)
 guard let webSocketURL = rtmResponse.data["url"]?.string else {
     throw BotError.invalidResponse
 }
