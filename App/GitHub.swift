@@ -51,16 +51,15 @@ struct GitHub {
     }
     
     func search(type: SearchType, query: [String: CustomStringConvertible]) throws -> HTTP.Response {
-//        let headers: [HeaderKey: String] = [
-//            "Accept": "application/vnd.github.v3.text-match+json",
-//            "User-Agent": "SwiftTrend"
-//            ]
-//        return try Client<TCPClientStream, Serializer<Request>, Parser<Response>>.get(
-//            type.uri,
-//            headers: headers,
-//            query: query
-//        )
-        return HTTP.Response()
+        let headers: [HeaderKey: String] = [
+            "Accept": "application/vnd.github.v3.text-match+json",
+            "User-Agent": "SwiftTrend"
+            ]
+        return try BasicClient.get(
+            type.uri,
+            headers: headers,
+            query: query
+        )
     }
     
     func searchRepositories(language: String = "swift") throws -> HTTP.Response {

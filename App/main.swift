@@ -8,7 +8,6 @@ let token = try BotConfig.botToken.load()
 let githubToken = try BotConfig.githubToken.load()
 
 let rtmResponse = try BasicClient.loadRealtimeApi(token: token)
-print(rtmResponse.data)
 guard let webSocketURL = rtmResponse.data["url"]?.string else {
     throw BotError.invalidResponse
 }
