@@ -1,5 +1,4 @@
 {
     "token": "$BOT_TOKEN",
-    "github_token": "$GITHUB_TOKEN",
-    "bot_user_id": "$BOT_USER_ID" 
+    "github_token": "$GITHUB_TOKEN"
 }

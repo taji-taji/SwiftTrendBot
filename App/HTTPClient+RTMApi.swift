@@ -21,7 +21,7 @@ extension HTTP.Client {
             "no_unreads": noUnreads.queryInt
         ]
         return try get(
-            "http://slack.com/api/rtm.start",
+            "https://slack.com/api/rtm.start",
             headers: headers,
             query: query
         )

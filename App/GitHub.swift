@@ -14,7 +14,7 @@ import Foundation
 
 struct GitHub {
     
-    static let baseURI   = "http://api.github.com"
+    static let baseURI   = "https://api.github.com"
     static let searchURI = baseURI + "/search"
     
     var token: String
