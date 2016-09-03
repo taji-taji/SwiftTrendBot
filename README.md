@@ -20,6 +20,9 @@ ex) trending swift
 
 By input `trending swift`, you will get information of the trending repositories written by `swift`.
 
+![](Resources/usage1.png)
+
+
 # Set up
 
 ## 1. Install Vapor
