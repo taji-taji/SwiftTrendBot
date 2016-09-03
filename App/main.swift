@@ -12,79 +12,83 @@ guard let webSocketURL = rtmResponse.data["url"]?.string else {
     throw BotError.invalidResponse
 }
 
-try WebSocket.connect(to: webSocketURL) { ws in
-    print("Connected to \(webSocketURL)")
-    
-    ws.onText = { ws, text in
-        print("[event] - \(text)")
+do {
+    try WebSocket.connect(to: webSocketURL) { ws in
+        print("Connected to \(webSocketURL)")
         
-        let event = try JSON(bytes: text.utf8.array)
-        guard
-            let channel = event["channel"]?.string,
-            let text = event["text"]?.string
-            else { return }
-        
-        let components = text.components(separatedBy: " ")
-        
-        if components[0] == "trending" {
-            let language = components[1]
-            var message = ""
+        ws.onText = { ws, text in
+            print("[event] - \(text)")
             
-            let github = GitHub(token: githubToken)
+            let event = try JSON(bytes: text.utf8.array)
+            guard
+                let channel = event["channel"]?.string,
+                let text = event["text"]?.string
+                else { return }
             
-            do {
-                let res = try github.searchRepositories(language: language)
-                if let items = res.data["items"]?.array {
-                    message += "=======================\n"
-                    message += "Trending Repositories of *\(language)*\n"
-                    message += "- Created after \(github.searchDate)\n"
-                    message += "=======================\n\n"
-                    message += "\n--------------\n\n"
-                    
-                    for item in items {
-                        guard
-                            let full_name = item.object?["full_name"]?.string,
-                            let stargazers_count = item.object?["stargazers_count"]?.int
-                            else { continue }
-                        message += "*\(full_name) (\(stargazers_count))*\n"
-                        if let description = item.object?["description"]?.string {
-                            message += "\(description)\n"
-                        }
-                        if let html_url = item.object?["html_url"]?.string {
-                            message += "\(html_url)\n"
-                        }
-                        message += "\n--------------\n\n"
-                    }
-                } else if let error = res.data["errors"]?.object, let errorMessage = error["message"]?.string {
-                    message = "Error! \(errorMessage)"
-                }
-            } catch ProgramStreamError.unsupportedSecurityLayer {
-                message = "Error! Unsupported Security Layer!"
-            } catch let error {
-                message = "Error! \(error)"
-            }
+            let components = text.components(separatedBy: " ")
             
-            let response = SlackMessage(to: channel, text: message)
-            try ws.send(response)
-        }
-
-        #if os(Linux)
-        
-        let timer
-            = Timer(fire: Date(), interval: TimeInterval(120), repeats: true) { (timer) -> Void in
+            if components[0] == "trending" {
+                let language = components[1]
+                var message = ""
+                
+                let github = GitHub(token: githubToken)
+                
                 do {
-                    try ws.send("Hello!")
+                    let res = try github.searchRepositories(language: language)
+                    if let items = res.data["items"]?.array {
+                        message += "=======================\n"
+                        message += "Trending Repositories of *\(language)*\n"
+                        message += "- Created after \(github.searchDate)\n"
+                        message += "=======================\n\n"
+                        message += "\n--------------\n\n"
+                        
+                        for item in items {
+                            guard
+                                let full_name = item.object?["full_name"]?.string,
+                                let stargazers_count = item.object?["stargazers_count"]?.int
+                                else { continue }
+                            message += "*\(full_name) (\(stargazers_count))*\n"
+                            if let description = item.object?["description"]?.string {
+                                message += "\(description)\n"
+                            }
+                            if let html_url = item.object?["html_url"]?.string {
+                                message += "\(html_url)\n"
+                            }
+                            message += "\n--------------\n\n"
+                        }
+                    } else if let error = res.data["errors"]?.object, let errorMessage = error["message"]?.string {
+                        message = "Error! \(errorMessage)"
+                    }
+                } catch ProgramStreamError.unsupportedSecurityLayer {
+                    message = "Error! Unsupported Security Layer!"
                 } catch let error {
-                    print(error)
+                    message = "Error! \(error)"
                 }
+                
+                let response = SlackMessage(to: channel, text: message)
+                try ws.send(response)
+            }
+
+            #if os(Linux)
+            
+            let timer
+                = Timer(fire: Date(), interval: TimeInterval(120), repeats: true) { (timer) -> Void in
+                    do {
+                        try ws.send("Hello!")
+                    } catch let error {
+                        print(error)
+                    }
+            }
+            timer.fire()
+            
+            #endif
+            
         }
-        timer.fire()
         
-        #endif
-        
+        ws.onClose = { ws, _, _, _ in
+            print("\n[CLOSED]\n")
+        }
     }
-    
-    ws.onClose = { ws, _, _, _ in
-        print("\n[CLOSED]\n")
-    }
+} catch let error {
+    print(error)
 }
