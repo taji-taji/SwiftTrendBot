@@ -70,20 +70,6 @@ do {
                 let response = SlackMessage(to: channel, text: message)
                 try ws.send(response)
             }
-
-            #if os(Linux)
-            
-            let timer
-                = Timer(fire: Date(), interval: TimeInterval(120), repeats: true) { (timer) -> Void in
-                    do {
-                        try ws.send("Hello!")
-                    } catch let error {
-                        print(error)
-                    }
-            }
-            timer.fire()
-            
-            #endif
             
         }
         
