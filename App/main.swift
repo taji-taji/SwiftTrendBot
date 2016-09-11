@@ -4,6 +4,8 @@ import HTTP
 import Transport
 import Foundation
 
+setupClient()
+
 let token = try BotConfig.botToken.load()
 let githubToken = try BotConfig.githubToken.load()
 
