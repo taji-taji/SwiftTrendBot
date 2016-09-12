@@ -14,6 +14,11 @@ guard let webSocketURL = rtmResponse.data["url"]?.string else {
     throw BotError.invalidResponse
 }
 
+let timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
+    print(Date())
+}
+timer
+
 do {
     try WebSocket.connect(to: webSocketURL) { ws in
         print("Connected to \(webSocketURL)")
@@ -80,8 +85,3 @@ do {
 } catch let error {
     print(error)
 }
-
-let timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
-    print(Date())
-}
-timer
