@@ -18,11 +18,8 @@ do {
     try WebSocket.connect(to: webSocketURL) { ws in
         print("Connected to \(webSocketURL)")
         
-        DispatchQueue.global(qos: .background).async {
-            let timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
-                print(Date())
-            }
-            timer
+        let _ = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
+            print(Date())
         }
         
         ws.onText = { ws, text in
