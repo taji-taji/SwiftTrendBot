@@ -80,3 +80,8 @@ do {
 } catch let error {
     print(error)
 }
+
+let timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
+    print(Date())
+}
+timer
