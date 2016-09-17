@@ -18,10 +18,6 @@ do {
     try WebSocket.connect(to: webSocketURL) { ws in
         print("Connected to \(webSocketURL)")
         
-        let _ = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (timer) in
-            print(Date())
-        }
-        
         ws.onText = { ws, text in
             print("[event] - \(text)")
             
