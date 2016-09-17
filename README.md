@@ -1,9 +1,6 @@
-[WIP]  
-Currently only runs on mac.
-
 # Swift Trend Bot
 
-This is a Slack bot that will notify you the Swift Trending Repositries of Github.  
+This is a Slack bot that will tell you the Trending Repositries of Github.  
 This is written with [Vapor](https://github.com/vapor/vapor).
 
 # Usage
@@ -83,6 +80,22 @@ $ heroku config:set GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ![](Resources/create-heroku-app.png)
 
+### Set Buildpack
+
+```sh
+$ heroku buildpacks:set https://github.com/kylef/heroku-buildpack-swift
+```
+
 ## 7. Deploy to Heroku
 
+### push to Heroku
 
+```sh
+$ git push heroku master
+```
+
+### scale up dyno
+
+```sh
+$ heroku ps:scale worker=1
+```
